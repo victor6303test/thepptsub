@@ -40,13 +40,13 @@
         var txts = txt1.split(sy);
         subslide = [];
 
-        for(i=0;i<txts.length;i++){
-            subslide[i] = pptx.addSlide();
-            subslide[i].addText(txts[i],
-            { x:0.0, y:0.25, w:'100%', h:1.5, align:'center', fontSize:30, color:'#FFFFFF', fill:{ color:'#000000' },}
-            );
-            subslide[i].background = { fill: "#92D050" }
-        }
+            for(i=0;i<txts.length;i++){
+                subslide[i] = pptx.addSlide();
+                subslide[i].addText(txts[i],
+                { x:0.0, y:0.25, w:'100%', h:1.5, align:'center', fontSize:30, color:'#FFFFFF', fill:{ color:'#000000' },}
+                );
+                subslide[i].background = { fill: "#92D050" }
+            }
         pptx.writeFile($("#filename").val()+"_直播字幕");
         }
         
@@ -58,13 +58,13 @@
         var txts = txt1.split(sy);
         subslide = [];
         
-        for(i=0;i<txts.length;i++){
-            subslide[i] = pptx.addSlide();
-            subslide[i].addText(txts[i],
-            { x:0.0, y:"36.7%", w:'100%', h:1.5, align:'center', fontSize:30, color:'#FFFFFF', fill:{ color:'#000000' },}
-            );
-            subslide[i].background = { fill: "#000000" }
-        }
+            for(i=0;i<txts.length;i++){
+                subslide[i] = pptx.addSlide();
+                subslide[i].addText(txts[i],
+                { x:0.0, y:"36.7%", w:'100%', h:1.5, align:'center', fontSize:30, color:'#FFFFFF', fill:{ color:'#000000' },}
+                );
+                subslide[i].background = { fill: "#000000" }
+            }
         pptx.writeFile($("#filename").val()+"_現場字幕(橫)");
         }
 
@@ -75,13 +75,13 @@
         var txts = txt1.split(sy);
         subslide = [];
         
-        for(i=0;i<txts.length;i++){
-            subslide[i] = pptx.addSlide();
-            subslide[i].addText(txts[i],
-            { x:'40%', y:0.0, w:2.0, h:'100%', align:'center', fontSize:30, color:'#FFFFFF', fill:{ color:'#000000' },vert:'eaVert'}
-            );
-            subslide[i].background = { fill: "#000000" }
-        }
+            for(i=0;i<txts.length;i++){
+                subslide[i] = pptx.addSlide();
+                subslide[i].addText(txts[i],
+                { x:'40%', y:0.0, w:2.0, h:'100%', align:'center', fontSize:30, color:'#FFFFFF', fill:{ color:'#000000' },vert:'eaVert'}
+                );
+                subslide[i].background = { fill: "#000000" }
+            }
         pptx.writeFile($("#filename").val()+"_現場字幕(直)");
         }
 
@@ -89,9 +89,9 @@
 </head>
 <body style="text-align: center; background-color:rgb(160, 158, 158)">
     <textarea id="addsub" cols="110" rows="40" placeholder="輸入字幕......" style="background-color:rgb(226, 226, 226); font-size: 18px;"></textarea><br>
-    <p style="font-weight:bold;">自訂分頁請在行跟行之間多空一行<br>PowerPoint裡，常用->取代->取代字型，可一次修改全部字型</p>
+    <p style="font-weight:bold;">自訂分頁請在行跟行之間多空一行<br>※字數較多時，需要等待一會才會出現檔案下載<br>PowerPoint裡，常用->取代->取代字型，可一次修改全部字型</p>
     <button id="CCB" style="background-color:goldenrod; font-weight:bold;" onclick="CustomS()">自訂分頁模式<br>(一頁多行)<p id="CC" style="color:blue; font-size:18px;">關</p></button>
-    <p style="font-weight:bold;">檔案名稱:&nbsp&nbsp<input id="filename" type="text" value="PTTSubtitle"></p>
+    <p style="font-weight:bold; font-size: 18px;">檔案名稱:&nbsp&nbsp<input style="font-size: 22px;" id="filename" type="text" value="PPTSubtitle"></p>
     <button onclick="SPPT()"><p>產生直播字幕(白字黑底綠頁)</p></button>&nbsp&nbsp
     <button onclick="LHPPT()"><p>產生現場字幕(白字全黑橫式)</p></button>&nbsp&nbsp
     <button onclick="LSPPT()"><p>產生現場字幕(白字全黑直式)</p></button><br><br><br>
