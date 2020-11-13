@@ -1,0 +1,92 @@
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script language="javascript" src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.3.1/dist/pptxgen.bundle.js"></script>
+    <script>
+        var txt1;
+        var subslide;
+        var cc = "關";
+        var sy = "\n";
+
+        //自訂
+        function CustomS(){
+            if(cc == "開"){
+                cc="關";
+                sy = "\n";
+                $("#CC").text(cc);
+                $("#CC").css("color","blue");
+                $("#CCB").css("background-color","goldenrod");
+            }
+            else{
+                cc = "開";
+                sy = "\n\n";
+                $("#CC").text(cc);
+                $("#CC").css("color","red");
+                $("#CCB").css("background-color","#ffe169");
+            }
+        }
+
+
+        //直播用
+        function SPPT(){
+        pptx = new PptxGenJS();
+        txt1 = document.getElementById('addsub').value;
+        var txts = txt1.split(sy);
+        subslide = [];
+
+        for(i=0;i<txts.length;i++){
+            subslide[i] = pptx.addSlide();
+            subslide[i].addText(txts[i],
+            { x:0.0, y:0.25, w:'100%', h:1.5, align:'center', fontSize:30, color:'#FFFFFF', fill:{ color:'#000000' },}
+            );
+            subslide[i].background = { fill: "#92D050" }
+        }
+        pptx.writeFile('PptxGenJs-Basic-Slide-Demo');
+        }
+        
+
+        //橫式現場用
+        function LHPPT(){
+        pptx = new PptxGenJS();
+        txt1 = document.getElementById('addsub').value;
+        var txts = txt1.split(sy);
+        subslide = [];
+        
+        for(i=0;i<txts.length;i++){
+            subslide[i] = pptx.addSlide();
+            subslide[i].addText(txts[i],
+            { x:0.0, y:"36.7%", w:'100%', h:1.5, align:'center', fontSize:30, color:'#FFFFFF', fill:{ color:'#000000' },}
+            );
+            subslide[i].background = { fill: "#000000" }
+        }
+        pptx.writeFile('PptxGenJs-Basic-Slide-Demo');
+        }
+
+        //直式現場用
+        function LSPPT(){
+        pptx = new PptxGenJS();
+        txt1 = document.getElementById('addsub').value;
+        var txts = txt1.split(sy);
+        subslide = [];
+        
+        for(i=0;i<txts.length;i++){
+            subslide[i] = pptx.addSlide();
+            subslide[i].addText(txts[i],
+            { x:'40%', y:0.0, w:2.0, h:'100%', align:'center', fontSize:30, color:'#FFFFFF', fill:{ color:'#000000' },vert:'eaVert'}
+            );
+            subslide[i].background = { fill: "#000000" }
+        }
+        pptx.writeFile('PptxGenJs-Basic-Slide-Demo');
+        }
+
+    </script>
+</head>
+<body style="text-align: center">
+    <textarea id="addsub" cols="100" rows="50" placeholder="輸入字幕......"></textarea><br>
+    <p style="font-weight:bold;">自訂分頁請在行跟行之間多空一行<br>PowerPoint裡，常用->取代->取代字型，可一次修改全部字型</p>
+    <button id="CCB" style="background-color:goldenrod; font-weight:bold;" onclick="CustomS()">自訂分頁模式<br>(一頁多行)<p id="CC" style="color:blue; font-size:18px;">關</p></button><br><br>
+    <button onclick="SPPT()"><p>產生直播字幕(白字黑底綠頁)</p></button>&nbsp&nbsp
+    <button onclick="LHPPT()"><p>產生現場字幕(白字全黑橫式)</p></button>&nbsp&nbsp
+    <button onclick="LSPPT()"><p>產生現場字幕(白字全黑直式)</p></button><br><br><br>
+</body>
+</html>
