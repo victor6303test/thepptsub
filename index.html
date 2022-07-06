@@ -85,6 +85,23 @@
         pptx.writeFile($("#filename").val()+"_現場字幕(直)");
         }
 
+        //投影上方字幕用
+        function LRSPPT(){
+        pptx = new PptxGenJS();
+        txt1 = document.getElementById('addsub').value;
+        var txts = txt1.split(sy);
+        subslide = [];
+        
+            for(i=0;i<txts.length;i++){
+                subslide[i] = pptx.addSlide();
+                subslide[i].addText(txts[i],
+                { x:0.0, y:0.026, w:'100%', h:1.5, valign:'top',align:'center', fontSize:34, color:'#FFFFFF', fill:{ color:'#000000' },fontFace:'Microsoft JhengHei'}
+                );
+                subslide[i].background = { fill: "#000000" }
+            }
+        pptx.writeFile($("#filename").val()+"_真劇場投影上方字幕");
+        }
+
     </script>
 </head>
 <body style="text-align: center; background-color:rgb(160, 158, 158)">
@@ -94,6 +111,7 @@
     <p style="font-weight:bold; font-size: 18px;">檔案名稱:&nbsp&nbsp<input style="font-size: 22px;" id="filename" type="text" value="PPTSubtitle"></p>
     <button style="border-radius: 5px;" onclick="SPPT()"><p>產生直播字幕(白字黑底綠頁)</p></button>&nbsp&nbsp
     <button style="border-radius: 5px;" onclick="LHPPT()"><p>產生現場字幕(白字全黑橫式)</p></button>&nbsp&nbsp
-    <button style="border-radius: 5px;" onclick="LSPPT()"><p>產生現場字幕(白字全黑直式)</p></button><br><br><br>
+    <button style="border-radius: 5px;" onclick="LSPPT()"><p>產生現場字幕(白字全黑直式)</p></button>&nbsp&nbsp
+    <button style="border-radius: 5px;" onclick="LRSPPT()"><p>產生真劇場投影上方字幕(白字全黑橫式)</p></button><br><br><br>
 </body>
 </html>
