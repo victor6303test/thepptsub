@@ -7,106 +7,157 @@
     <meta property="og:description" content="thepptsub">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script language="javascript" src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.3.1/dist/pptxgen.bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.12.0/dist/pptxgen.bundle.js"></script>
     <script>
-        var txt1;
-        var subslide;
-        var cc = "關";
-        var sy = "\n";
 
-        //自訂
-        function CustomS(){
-            if(cc == "開"){
-                cc="關";
-                sy = "\n";
-                $("#CC").text(cc);
-                $("#CC").css("color","blue");
-                $("#CCB").css("background-color","goldenrod");
-            }
-            else{
-                cc = "開";
-                sy = "\n\n";
-                $("#CC").text(cc);
-                $("#CC").css("color","red");
-                $("#CCB").css("background-color","#ffe169");
-            }
+    var txt1;
+    var subslide;
+    var cc = "關";
+    var sy = "\n";
+
+    //自訂
+    function CustomS(){
+        if(cc == "開"){
+            cc="關";
+            sy = "\n";
+            $("#CC").text(cc);
+            $("#CC").css("color","blue");
+            $("#CCB").css("background-color","goldenrod");
         }
-
-
-        //直播用
-        function SPPT(){
-        pptx = new PptxGenJS();
-        txt1 = document.getElementById('addsub').value;
-        var txts = txt1.split(sy);
-        subslide = [];
-
-            for(i=0;i<txts.length;i++){
-                subslide[i] = pptx.addSlide();
-                subslide[i].addText(txts[i],
-                { x:0.0, y:0.25, w:'100%', h:1.5, align:'center', fontSize:30, color:'#FFFFFF', fill:{ color:'#000000' },}
-                );
-                subslide[i].background = { fill: "#92D050" }
-            }
-        pptx.writeFile($("#filename").val()+"_直播字幕");
+        else{
+            cc = "開";
+            sy = "\n\n";
+            $("#CC").text(cc);
+            $("#CC").css("color","red");
+            $("#CCB").css("background-color","#ffe169");
         }
-        
+    }
 
-        //橫式現場用
-        function LHPPT(){
-        pptx = new PptxGenJS();
-        txt1 = document.getElementById('addsub').value;
-        var txts = txt1.split(sy);
-        subslide = [];
-        
-            for(i=0;i<txts.length;i++){
-                subslide[i] = pptx.addSlide();
-                subslide[i].addText(txts[i],
-                { x:0.0, y:"36.7%", w:'100%', h:1.5, align:'center', fontSize:30, color:'#FFFFFF', fill:{ color:'#000000' },}
-                );
-                subslide[i].background = { fill: "#000000" }
-            }
-        pptx.writeFile($("#filename").val()+"_現場字幕(橫)");
-        }
+    //直播用
+    function SPPT(){
+    let pptx = new PptxGenJS();
+    pptx.layout = "LAYOUT_16x9";
+    pptx.defineSlideMaster({
+     title: "MainContent",
+     background: { color: "#92D050" },
+     objects: [
+      {
+       placeholder: {
+        options: { name: "body", type: "body",x:0.0, y:0.25, w:'100%', h:1.5, align:'center' ,valign:'middle', fontSize:30, color:'#FFFFFF', fill:{ color:'#000000' }},
+        text: "可以在此修改字型及版面配置。"+"\n"+"全選投影片後，在左上方常用->版面配置可選MainContent一次全部套用。",
+       },
+      },
+     ],
+    });
+    txt1 = document.getElementById('addsub').value;
+    var txts = txt1.split(sy);
+    subslide = [];
 
-        //直式現場用
-        function LSPPT(){
-        pptx = new PptxGenJS();
-        txt1 = document.getElementById('addsub').value;
-        var txts = txt1.split(sy);
-        subslide = [];
-        
-            for(i=0;i<txts.length;i++){
-                subslide[i] = pptx.addSlide();
-                subslide[i].addText(txts[i],
-                { x:'40%', y:0.0, w:2.0, h:'100%', align:'left', fontSize:30, color:'#FFFFFF', fill:{ color:'#000000' },vert:'eaVert'}
-                );
-                subslide[i].background = { fill: "#000000" }
-            }
-        pptx.writeFile($("#filename").val()+"_現場字幕(直)");
+        for(i=0;i<txts.length;i++){
+            subslide[i] = pptx.addSlide({ masterName: "MainContent" });
+            subslide[i].addText(txts[i],
+            {placeholder: "body"}
+            );
         }
+    pptx.writeFile($("#filename").val()+"_直播字幕");
+    }
 
-        //投影上方字幕用
-        function LRSPPT(){
-        pptx = new PptxGenJS();
-        txt1 = document.getElementById('addsub').value;
-        var txts = txt1.split(sy);
-        subslide = [];
-        
-            for(i=0;i<txts.length;i++){
-                subslide[i] = pptx.addSlide();
-                subslide[i].addText(txts[i],
-                { x:0.0, y:0.026, w:'100%', h:1.5, valign:'top',align:'center', fontSize:34, color:'#FFFFFF', fill:{ color:'#000000' },fontFace:'Microsoft JhengHei'}
-                );
-                subslide[i].background = { fill: "#000000" }
-            }
-        pptx.writeFile($("#filename").val()+"_真劇場投影上方字幕");
+
+    //橫式現場用
+    function LHPPT(){
+    let pptx = new PptxGenJS();
+    pptx.layout = "LAYOUT_16x9";
+    pptx.defineSlideMaster({
+     title: "MainContent",
+     background: { color: "#000000" },
+     objects: [
+      {
+       placeholder: {
+        options: { name: "body", type: "body", x:0.0, y:"36.7%", w:'100%', h:1.5, align:'center',valign:'middle', fontSize:30, color:'#FFFFFF', fill:{ color:'#000000' }},
+        text: "可以在此修改字型及版面配置。"+"\n"+"全選投影片後，在左上方常用->版面配置可選MainContent一次全部套用。",
+       },
+      },
+     ],
+    });
+    txt1 = document.getElementById('addsub').value;
+    var txts = txt1.split(sy);
+    subslide = [];
+    
+        for(i=0;i<txts.length;i++){
+            subslide[i] = pptx.addSlide({ masterName: "MainContent" });
+            subslide[i].addText(txts[i],
+            {placeholder: "body"}
+            );
         }
+    pptx.writeFile($("#filename").val()+"_現場字幕(橫)");
+    }
+
+
+    //直式現場用
+    function LSPPT(){
+    let pptx = new PptxGenJS();
+    pptx.layout = "LAYOUT_16x9";
+    pptx.defineSlideMaster({
+     title: "MainContent",
+     background: { color: "#000000" },
+     objects: [
+      {
+       placeholder: {
+        options: { name: "body", type: "body",align:'left',valign:'middle',x:'40%', y:0.0, w:2.0, h:'100%', fontSize:30, color:'#FFFFFF', fill:{ color:'#000000' },vert:'eaVert'},
+        text: "可以在此修改字型及版面配置。"+"\n"+"全選投影片後，在左上方常用->版面配置可選MainContent一次全部套用。",
+       },
+      },
+     ],
+    });
+    txt1 = document.getElementById('addsub').value;
+    var txts = txt1.split(sy);
+    subslide = [];
+    
+        for(i=0;i<txts.length;i++){
+            subslide[i] = pptx.addSlide({ masterName: "MainContent" });
+            subslide[i].addText(txts[i],
+            {placeholder: "body"}
+            );
+        }
+    pptx.writeFile($("#filename").val()+"_現場字幕(直)");
+    }    
+
+
+    //投影上方字幕用
+    function LRSPPT(){
+    let pptx = new PptxGenJS();
+    pptx.layout = "LAYOUT_16x9";
+    pptx.defineSlideMaster({
+     title: "MainContent",
+     background: { color: "#000000" },
+     objects: [
+      {
+       placeholder: {
+        options: { name: "body", type: "body",align:'center',valign:'top',x:0.0, y:0.026, w:'100%', h:1.5, fontSize:34, color:'#FFFFFF', fill:{ color:'#000000' }},
+        text: "可以在此修改字型及版面配置。"+"\n"+"全選投影片後，在左上方常用->版面配置可選MainContent一次全部套用。",
+       },
+      },
+     ],
+    });
+    txt1 = document.getElementById('addsub').value;
+    var txts = txt1.split(sy);
+    subslide = [];
+    
+        for(i=0;i<txts.length;i++){
+            subslide[i] = pptx.addSlide({ masterName: "MainContent" });
+            subslide[i].addText(txts[i],
+            {placeholder: "body"}
+            );
+        }
+    pptx.writeFile($("#filename").val()+"_真劇場投影上方字幕");
+    }
+
 
     </script>
 </head>
 <body style="text-align: center; background-color:rgb(160, 158, 158)">
-    <textarea id="addsub" cols="110" rows="40" placeholder="輸入字幕......" style="background-color:rgb(226, 226, 226); font-size: 18px;"></textarea><br>
-    <p style="font-weight:bold; line-height: 170%;">自訂分頁請在行跟行之間多空一行<br>※字數較多時，需要等待一會才會出現檔案下載<br>PowerPoint裡，常用->取代->取代字型，可一次修改全部字型</p>
+    <textarea id="addsub" cols="110" rows="40" placeholder="輸入字幕......" style="background-color:rgb(226, 226, 226); font-size: 18px;"></textarea>
+    <p style="font-weight:bold; line-height: 170%;">自訂分頁請在行跟行之間多空一行<br>※字數較多時，需要等待一會才會出現檔案下載<br>更新投影片母片功能，可一次調整</p>
     <button id="CCB" style="background-color:goldenrod; font-weight:bold;" onclick="CustomS()">自訂分頁模式<br>(一頁多行)<p id="CC" style="color:blue; font-size:18px;">關</p></button>
     <p style="font-weight:bold; font-size: 18px;">檔案名稱:&nbsp&nbsp<input style="font-size: 22px;" id="filename" type="text" value="PPTSubtitle"></p>
     <button style="border-radius: 5px;" onclick="SPPT()"><p>產生直播字幕(白字黑底綠頁)</p></button>&nbsp&nbsp
