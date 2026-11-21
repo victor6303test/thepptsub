@@ -1,6 +1,8 @@
-<html>
+<!DOCTYPE html>
+<html lang="zh-Hant">
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta property="og:site_name" content="thepptsub">
     <meta property="og:type" content="website">
     <meta property="og:title" content="thepptsub">
@@ -47,8 +49,10 @@
         }
         /* 預覽區塊的比例與縮放 */
         .preview-wrapper {
-            width: 480px; 
-            height: 270px; 
+            width: calc(100% - 4px);  /* 扣掉左右 2px 虛線框 */
+            max-width: 480px;
+            aspect-ratio: 16 / 9;     /* 寬度跟著螢幕縮放，高度自動維持 16:9 */
+            box-sizing: content-box;  /* 16:9 算在框線內側，模擬投影片才不會被裁到 */
             border: 2px dashed #888; 
             background-color: #fff;
             overflow: hidden; 
@@ -59,7 +63,7 @@
         #previewSlide {
             width: 960px; 
             height: 540px; 
-            transform: scale(0.5); 
+            transform: scale(0.5);  /* 實際倍率由 fitPreview() 依預覽框寬度計算 */
             transform-origin: top left; 
             position: relative; 
             box-sizing: border-box;
@@ -154,6 +158,59 @@
             color: #856404;
             margin-top: 10px;
             line-height: 1.5;
+        }
+
+        /* ================= RWD ================= */
+        *, *::before, *::after { box-sizing: border-box; }
+        .left-panel, .right-panel {
+            flex: 1 1 0;
+            min-width: 0;          /* 讓內容可以縮，不會把版面撐爆 */
+            max-width: 520px;
+        }
+        textarea {
+            width: 100%;
+            max-width: 100%;
+            min-height: 200px;
+            line-height: 1.5;
+        }
+        .hint-text { width: 100%; }
+        .toggle-row { width: 100%; }
+        .toggle-row button { flex: 1 1 0; max-width: 200px; font-size: 15px; }
+        .controls-row { flex-wrap: wrap; gap: 10px 20px; }
+        .controls-row label { white-space: nowrap; }
+        .refT { margin-bottom: 10px; text-align: center; }
+        .btn-group button { margin: 5px 0; min-height: 44px; }
+        @media (hover: none) {
+            .btn-group button:hover { background-color: #fff; } /* 觸控裝置不留 hover 灰底 */
+        }
+
+        /* 平板直向與手機：改成上下排列 */
+        @media (max-width: 900px) {
+            body { padding: 12px; }
+            h2 { font-size: 22px; margin: 4px 0 12px; }
+            .main-container { flex-direction: column; align-items: center; gap: 20px; }
+            .left-panel, .right-panel { width: 100%; max-width: 600px; flex: none; }
+            .preview-wrapper { max-width: none; }
+            textarea { height: 40vh; }
+        }
+
+        /* 手機 */
+        @media (max-width: 480px) {
+            body { padding: 8px; }
+            h2 { font-size: 20px; }
+            .hint-text { font-size: 13px; }
+            .controls-box { padding: 10px; }
+            .controls-row { flex-direction: column; align-items: stretch; gap: 8px; }
+            .controls-row label {
+                display: flex; align-items: center;
+                white-space: normal; gap: 6px;
+            }
+            /* 輸入框和後面的 % 一起靠右 */
+            .controls-row label input, .controls-row label select { margin-left: auto; }
+            .controls-row select { flex: 1; min-width: 0; max-width: 220px; }
+            .pagination-controls { gap: 8px; }
+            .pagination-controls button { padding: 8px 12px; min-height: 40px; }
+            .toggle-row { gap: 10px; }
         }
     </style>
 
@@ -320,7 +377,21 @@
             el.setSelectionRange(before.length, before.length);
         }
 
+        // 依預覽框目前的寬度，把 960x540 的模擬投影片等比例縮放進去
+        function fitPreview() {
+            var wrapper = document.querySelector(".preview-wrapper");
+            if (!wrapper) return;
+            var scale = wrapper.clientWidth / 960;
+            document.getElementById("previewSlide").style.transform = "scale(" + scale + ")";
+        }
+
         $(document).ready(function() {
+            fitPreview();
+            if (window.ResizeObserver) {
+                new ResizeObserver(fitPreview).observe(document.querySelector(".preview-wrapper"));
+            } else {
+                $(window).on("resize orientationchange", fitPreview);
+            }
             // 要先綁這個，才會在 updatePreview 之前把逗號換掉
             $("#addsub")
                 .on("compositionstart", function () { isComposing = true; })
@@ -486,7 +557,7 @@
             <div class="hint-text">
                 💡 <b>母片修改秘訣 (必看)：</b><br>
                 1. 匯出後，在 PPT 開啟 <b>檢視 -> 投影片母片</b>。<br>
-                2. <b>滑鼠游標點進去把字「全部反白(全選)」</b><br>&emsp;再去調整文字位置、字體或字體大小，預覽就會同步變更。<br>
+                2. <b>滑鼠游標點進去把字「全部反白(全選)」</b>，再去調整字體大小，預覽就會同步變更。<br>
                 3. 關閉母片回到普通畫面後，在左側縮圖區 <b>全選 (Ctrl+A)</b> 所有投影片。<br>
                 4. 點擊上方工具列 <b>常用 ->「重設」(新投影片右邊的按鈕)</b>，所有字幕就會瞬間套用母片設定！
             </div>
@@ -511,7 +582,7 @@
                 <div class="controls-row">
                     <label style="font-weight: bold;">
                         模擬預覽情境：
-                        <select id="previewMode" style="padding:4px; font-size:15px;">
+                        <select id="previewMode" style="padding:4px; font-size:16px;">
                             <option value="SPPT">直播字幕 (白字黑底綠頁)</option>
                             <option value="LHPPT">現場字幕 (白字全黑橫式)</option>
                             <option value="LSPPT">現場字幕 (白字全黑直式)</option>
